@@ -48,11 +48,11 @@ import datetime
 
 # 開啟輸出的 CSV 檔案
 
-with open('output.csv', 'a', newline='') as csvfile:
+with open('kline.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile)
 
     for i in range(1000):
-        endTime = 1609459200000 + i * 900000 * 1000  
+        endTime = 1575158400000 + i * 900000 * 1000
         dt_object = datetime.datetime.fromtimestamp(endTime / 1000)
         print(dt_object)
 
@@ -61,7 +61,7 @@ with open('output.csv', 'a', newline='') as csvfile:
         
         # 寫入一列資料
         for i in kline:
-            writer.writerow([i[0], i[1], i[2], i[3], i[4]], i[5])
+            writer.writerow([i[0], i[1], i[2], i[3], i[4], i[5]])
 
 
     

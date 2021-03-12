@@ -22,16 +22,18 @@ def normolization(data):
     data['RSI'] = data['RSI'].apply(lambda x: x/100)
     data['K'] = data['K'].apply(lambda x: x/100)
     data['D'] = data['D'].apply(lambda x: x/100)
-
+    data['MFI'] = data['MFI'].apply(lambda x: x / 100)
+    data['WILLR'] = data['WILLR'].apply(lambda x: -x / 100)
     # 26.34791967 -37.93686256
     '''
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(data['MacdHist'].to_numpy().reshape(-1, 1))
     tmp = scaler.transform(data['MacdHist'].to_numpy().reshape(-1, 1))
     '''
     data['MacdHist'] = data['MacdHist'].apply(lambda x: (x + 50) / 100 )
-
+    data['SMA'] = data['SMA'].apply(lambda x: x / 3000)
+    data['TEMA'] = data['TEMA'].apply(lambda x: x / 3000)
     data['EMA9'] = data['EMA9'].apply(lambda x: x / 3000)
-    data['EMA19'] = data['EMA19'].apply(lambda x: x / 3000)
+    data['WMA'] = data['WMA'].apply(lambda x: x / 3000)
     data['CMO'] = data['CMO'].apply(lambda x: (x+100) / 200)
 
     # [4536995.426] [-3861686.569]
@@ -58,6 +60,7 @@ def normolization(data):
 if __name__ == '__main__':  # For test Class
     data = pd.read_csv('output.csv', dtype=np.float)
     data['RSI'] = talib.RSI(data['close'], timeperiod = 14)
+    data['WILLR'] = talib.WILLR(data['high'], data['low'], data['close'])
     data['K'], data['D'] = talib.STOCH(data['high'],
                                                    data['low'],
                                                    data['close'],
@@ -66,14 +69,19 @@ if __name__ == '__main__':  # For test Class
                                                    slowk_matype=0,
                                                    slowd_period=3,
                                                    slowd_matype=0)
-    data['MacdHist'] = getMacdHist(data, 7, 52, 8)
+    data['WMA'] = talib.WMA(data['close'], 20)
     data['EMA9'] = talib.EMA(data['close'], timeperiod=9)
-    data['EMA19'] = talib.EMA(data['close'], timeperiod=19)
-    data['CMO'] = talib.CMO(data['close'])
-    data['OBV'] = talib.OBV(data['close'], data['volume'])
-    data['ROC'] = talib.ROC(data['close'], 10)
-    data['PPO'] = talib.PPO(data['close'], 10, 21)
+    data['SMA'] = talib.SMA(data['close'], timeperiod=18)
+    data['TEMA'] = talib.TEMA(data['close'], timeperiod=15)
+    data['MacdHist'] = getMacdHist(data, 7, 52, 8)
     data['CCI'] = talib.CCI(data['high'], data['low'], data['close'], 20)
+    data['CMO'] = talib.CMO(data['close'])
+    data['PPO'] = talib.PPO(data['close'], 10, 21)
+    data['ROC'] = talib.ROC(data['close'], 10)
+    data['MFI'] = talib.MFI(data['high'], data['low'], data['close'], data['volume'])
+    data['OBV'] = talib.OBV(data['close'], data['volume'])
+
+
 
     data.drop(columns=['open', 'high', 'low', 'volume'], inplace=True)
     data = normolization(data)

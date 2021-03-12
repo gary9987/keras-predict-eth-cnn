@@ -18,7 +18,7 @@ def normolization(data):
         list.append(i)
 
     data.drop(list, inplace = True)
-    data['close'] = data['close'].apply(lambda x: x/3000)
+    data['close'] = data['close'].apply(lambda x: float(x)/3000)
     data['RSI'] = data['RSI'].apply(lambda x: x/100)
     data['K'] = data['K'].apply(lambda x: x/100)
     data['D'] = data['D'].apply(lambda x: x/100)
@@ -52,7 +52,7 @@ def normolization(data):
 
 
 if __name__ == '__main__':  # For test Class
-    data = pd.read_csv('output.csv')
+    data = pd.read_csv('output.csv', dtype=np.float)
     data['RSI'] = talib.RSI(data['close'], timeperiod = 14)
     data['K'], data['D'] = talib.STOCH(data['high'],
                                                    data['low'],
@@ -71,6 +71,7 @@ if __name__ == '__main__':  # For test Class
     data['PPO'] = talib.PPO(data['close'], 10, 21)
     data['CCI'] = talib.CCI(data['high'], data['low'], data['close'], 20)
 
+    data.drop(columns=['open', 'high', 'low', 'volume'], inplace=True)
     data = normolization(data)
     data.to_csv('output2.csv', index=None)
 

@@ -24,29 +24,33 @@ def normolization(data):
     data['D'] = data['D'].apply(lambda x: x/100)
 
     # 26.34791967 -37.93686256
+    '''
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(data['MacdHist'].to_numpy().reshape(-1, 1))
     tmp = scaler.transform(data['MacdHist'].to_numpy().reshape(-1, 1))
-
-    data['MacdHist'] = pd.DataFrame(tmp)
+    '''
+    data['MacdHist'] = data['MacdHist'].apply(lambda x: (x + 50) / 100 )
 
     data['EMA9'] = data['EMA9'].apply(lambda x: x / 3000)
     data['EMA19'] = data['EMA19'].apply(lambda x: x / 3000)
     data['CMO'] = data['CMO'].apply(lambda x: (x+100) / 200)
 
     # [4536995.426] [-3861686.569]
+    '''
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(data['OBV'].to_numpy().reshape(-1, 1))
-    print(scaler.data_max_, scaler.data_min_)
     tmp = scaler.transform(data['OBV'].to_numpy().reshape(-1, 1))
-    data['OBV'] = pd.DataFrame(tmp)
+    '''
+    data['OBV'] = data['OBV'].apply(lambda x: (x + 5000000) / 10000000)
 
     data['ROC'] = data['ROC'].apply(lambda x: (x+100) / 200)
     data['PPO'] = data['PPO'].apply(lambda x: (x+30) / 60)
 
     # [607.88206568] [-619.41408855]
+    '''
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(data['CCI'].to_numpy().reshape(-1, 1))
     print(scaler.data_max_, scaler.data_min_)
     tmp = scaler.transform(data['CCI'].to_numpy().reshape(-1, 1))
-    data['CCI'] = pd.DataFrame(tmp)
+    '''
+    data['CCI'] = data['CCI'].apply(lambda x: (x + 700) / 1400)
 
     return data
 
@@ -65,7 +69,7 @@ if __name__ == '__main__':  # For test Class
     data['MacdHist'] = getMacdHist(data, 7, 52, 8)
     data['EMA9'] = talib.EMA(data['close'], timeperiod=9)
     data['EMA19'] = talib.EMA(data['close'], timeperiod=19)
-    data['CMO'] = talib.stream_CMO(data['close'])
+    data['CMO'] = talib.CMO(data['close'])
     data['OBV'] = talib.OBV(data['close'], data['volume'])
     data['ROC'] = talib.ROC(data['close'], 10)
     data['PPO'] = talib.PPO(data['close'], 10, 21)

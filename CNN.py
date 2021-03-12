@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
 from solve_cudnn_error import *
+from sklearn.model_selection import train_test_split
 
 solve_cudnn_error()
 
@@ -18,10 +19,10 @@ def make_train(data, k_length = 13):
 
 if __name__ == '__main__':  # For test Class
 
-
+    window = 21
     data = pd.read_csv('output2.csv', dtype=np.float)
 
-    x, y = make_train(data)
+    x, y = make_train(data, window)
     # 43110 13 13
     orig_shape = x.shape
     print(orig_shape)
@@ -36,9 +37,12 @@ if __name__ == '__main__':  # For test Class
     Y_new = tf.keras.utils.to_categorical(Y_new, 3)
     print(X_new.shape, Y_new.shape)
 
+    XTraining, XValidation, YTraining, YValidation = train_test_split(X_new, Y_new, stratify=Y_new, test_size=0.4, random_state = 777 )  # before model building
+
+
 
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu',padding='same', input_shape=(13, 13, 1)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu',padding='same', input_shape=(orig_shape[1], orig_shape[2], 1)),
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Dropout(0.25),
@@ -49,7 +53,7 @@ if __name__ == '__main__':  # For test Class
     ])
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
-    model.fit(X_new, Y_new, batch_size = 20, epochs = 10, validation_split=0.3)
+    model.fit(XTraining, YTraining, batch_size=20, epochs=5, validation_data=(XValidation, YValidation))
     model.save('model.h5')
 
 

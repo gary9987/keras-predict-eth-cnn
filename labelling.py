@@ -2,6 +2,7 @@ import numpy as np
 import math
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 
 def tripleBarrier(price, ub, lb, max_period):
     def end_price(s):
@@ -27,10 +28,33 @@ def tripleBarrier(price, ub, lb, max_period):
     
 if __name__ == '__main__':  # For test Class
     df = pd.read_csv('kline.csv')
+
+
+    plt.show()
+
     df.drop(columns=['time'], inplace=True)
 
-    data = tripleBarrier(df['close'], 1.06, 0.96, 150)
+    data = tripleBarrier(df['close'], 1.005, 0.995, 10)
     print(data)
     df['strategy'] = data['triple_barrier_signal']
     print(df['strategy'].value_counts())
+
+    #plt.figure(figsize=(32, 32))
+    fig, ax1 = plt.subplots()
+    plt.title('strategy')
+    plt.xlabel('order')
+    ax2 = ax1.twinx()
+
+    ax1.set_ylabel('close', color='tab:blue')
+    ax1.plot(df['close'][40000:40100], color='tab:blue', alpha=0.75)
+    ax1.tick_params(axis='y', labelcolor='tab:blue')
+
+    ax2.set_ylabel('strategy', color='black')
+    ax2.plot(df['strategy'][40000:40100], color='black', alpha=0.75)
+    ax2.tick_params(axis='y', labelcolor='black')
+
+    fig.tight_layout()
+    plt.show()
+
     df.to_csv('output.csv', index=None)
+

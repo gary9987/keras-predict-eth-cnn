@@ -1,43 +1,7 @@
 import numpy as np
 import math
 import pandas as pd
-
-def Labelling(data):
-    windowSize = 11
-    counterRow = 0
-    result = [-2, -2, -2, -2, -2]
-    while(counterRow < len(data.index)):
-        min = 1000000000000
-        max = 0
-        counterRow += 1
-        if(counterRow >= windowSize):
-            windowBeginIndex = counterRow - windowSize
-            windowEndIndex = windowBeginIndex + windowSize - 1
-            windowMiddleIndex = (windowBeginIndex + windowEndIndex) / 2
-            for i in range(windowBeginIndex, windowEndIndex+1) :
-                number = data['close'][i]
-                if (number < min):
-                    min = number
-                    minIndex = i
-                if (number > max):
-                    max = number
-                    maxIndex = i
-
-            if (maxIndex == windowMiddleIndex):
-                result.append(-1) # Sell
-            elif (minIndex == windowMiddleIndex):
-                result.append(1) # Buy
-            else:
-                result.append(0) # Hold
-    
-    result.append(-2)
-    result.append(-2)
-    result.append(-2)
-    result.append(-2)
-    result.append(-2)
-    return result
-
-
+import matplotlib.pyplot as plt
 
 def tripleBarrier(price, ub, lb, max_period):
     def end_price(s):
@@ -61,10 +25,18 @@ def tripleBarrier(price, ub, lb, max_period):
     return ret
 
     
+if __name__ == '__main__':  # For test Class
+    df = pd.read_csv('kline.csv')
 
-df = pd.read_csv('kline.csv')
-data = tripleBarrier(df['close'], 1.06, 0.97, 160)
-print(data)
-df['stratrgy'] = data['triple_barrier_signal']
-print(df['stratrgy'].value_counts())
-df.to_csv('output.csv', index=None)
+    data = tripleBarrier(df['close'], 1.06, 0.97, 160)
+    print(data)
+    df['strategy'] = data['triple_barrier_signal']
+    print(df['strategy'].value_counts())
+    df.to_csv('output.csv', index=None)
+    '''
+    new = pd.DataFrame()
+    new['stratrgy'] = df['stratrgy']
+    new['close'] = df['close']
+    new.plot()
+    plt.show()
+    '''

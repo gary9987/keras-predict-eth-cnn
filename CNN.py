@@ -43,32 +43,41 @@ if __name__ == '__main__':  # For test Class
     Y_new = tf.keras.utils.to_categorical(Y_new, 3)
     print(X_new.shape, Y_new.shape)
 
-    XTraining, XValidation, YTraining, YValidation = train_test_split(X_new, Y_new, stratify=Y_new, test_size=0.2, random_state = 7 )  # before model building
+    XTraining, XEval, YTraining, YEval = train_test_split(X_new, Y_new, stratify=Y_new, test_size=0.2, random_state = 7 )  # before model building
 
-
+    XTraining, XValidation, YTraining, YValidation = train_test_split(XTraining, YTraining, stratify=YTraining, test_size=0.3, random_state = 7 )  # before model building
 
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu',padding='same', input_shape=(orig_shape[1], orig_shape[2], 1)),
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=(orig_shape[1], orig_shape[2], 1)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        tf.keras.layers.Dropout(0.25),
+
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        tf.keras.layers.Dropout(0.25),
+
+
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        tf.keras.layers.Dropout(0.25),
 
         tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(128, activation=tf.nn.relu), # 128
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(3, activation=tf.nn.softmax)
     ])
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
-    #model.fit(XTraining, YTraining, batch_size=20, epochs=100, validation_data=(XValidation, YValidation))
-    model.fit(XTraining, YTraining, batch_size=20, epochs=60, validation_split = 0.15)
+    model.fit(XTraining, YTraining, batch_size=20, epochs=100, validation_data=(XValidation, YValidation))
+    #model.fit(XTraining, YTraining, batch_size=20, epochs=60, validation_split = 0.15)
 
-    cost = model.evaluate(XValidation, YValidation, batch_size=20)
+    cost = model.evaluate(XEval, YEval, batch_size=20)
     print("test cost: {}".format(cost))
     #model.save('model.h5')
 

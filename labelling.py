@@ -34,7 +34,7 @@ if __name__ == '__main__':  # For test Class
 
     df.drop(columns=['time'], inplace=True)
 
-    data = tripleBarrier(df['close'], 1.005, 0.97, 10)
+    data = tripleBarrier(df['close'], 1.03, 0.99, 80)
     print(data)
     df['strategy'] = data['triple_barrier_signal']
     print(df['strategy'].value_counts())

@@ -24,7 +24,7 @@ def make_train(data, k_length = 13):
 
 if __name__ == '__main__':  # For test Class
 
-    window = 16
+    window = 39
     data = pd.read_csv('output2.csv', dtype=np.float)
 
     x, y = make_train(data, window)

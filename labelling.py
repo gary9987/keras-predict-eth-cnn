@@ -27,14 +27,11 @@ def tripleBarrier(price, ub, lb, max_period):
 
     
 if __name__ == '__main__':  # For test Class
-    df = pd.read_csv('kline1.csv')
-
+    df = pd.read_csv('3.csv')
 
     plt.show()
 
-    #df.drop(columns=['time'], inplace=True)
-
-    data = tripleBarrier(df['close'], 1.03, 0.98, 40)
+    data = tripleBarrier(df['close'], 1.04, 0.97, 40)
     print(data)
     df['strategy'] = data['triple_barrier_signal']
     print(df['strategy'].value_counts())
@@ -46,15 +43,15 @@ if __name__ == '__main__':  # For test Class
     ax2 = ax1.twinx()
 
     ax1.set_ylabel('close', color='tab:blue')
-    ax1.plot(df['close'][41800:42100], color='tab:blue', alpha=0.75)
+    ax1.plot(df['close'][10000:10100], color='tab:blue', alpha=0.75)
     ax1.tick_params(axis='y', labelcolor='tab:blue')
 
     ax2.set_ylabel('strategy', color='black')
-    ax2.plot(df['strategy'][41800:42100], color='black', alpha=0.75)
+    ax2.plot(df['strategy'][10000:10100], color='black', alpha=0.75)
     ax2.tick_params(axis='y', labelcolor='black')
 
     fig.tight_layout()
     plt.show()
 
-    df.to_csv('output.csv', index=None)
+    df.to_csv('3o1.csv', index=None)
 

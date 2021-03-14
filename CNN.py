@@ -48,22 +48,29 @@ if __name__ == '__main__':  # For test Class
     XTraining, XValidation, YTraining, YValidation = train_test_split(XTraining, YTraining, stratify=YTraining, test_size=0.3, random_state = 87 )  # before model building
 
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=(orig_shape[1], orig_shape[2], 1)),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same', input_shape=(orig_shape[1], orig_shape[2], 1)),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        tf.keras.layers.Dropout(0.25),
+
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
         tf.keras.layers.Dropout(0.25),
 
+
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
         tf.keras.layers.Dropout(0.25),
 
-
-        tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
-        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
         tf.keras.layers.Dropout(0.25),
+
 
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(256, activation='relu'),
@@ -79,6 +86,6 @@ if __name__ == '__main__':  # For test Class
 
     cost = model.evaluate(XEval, YEval, batch_size=20)
     print("test cost: {}".format(cost))
-    model.save('model.h5')
+    #model.save('model.h5')
 
 

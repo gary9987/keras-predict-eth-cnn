@@ -48,11 +48,11 @@ import datetime
 
 # 開啟輸出的 CSV 檔案
 if __name__ == '__main__':  # For test Class
-    with open('kline1.csv', 'a', newline='') as csvfile:
+    with open('kline1.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-
+        writer.writerow(['time', 'open', 'high', 'low', 'close', 'volume'])
         for i in range(1000):
-            endTime = 1575158400000 + i * 900000 * 1000
+            endTime = 1577836800000 + i * 900000 * 1000
             dt_object = datetime.datetime.fromtimestamp(endTime / 1000)
             print(dt_object)
 

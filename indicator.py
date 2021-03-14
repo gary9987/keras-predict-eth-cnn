@@ -59,6 +59,7 @@ def normolization(data):
 
 if __name__ == '__main__':  # For test Class
     data = pd.read_csv('output.csv', dtype=np.float)
+    data.drop(columns=['time'], inplace=True)
     data['RSI'] = talib.RSI(data['close'], timeperiod = 14)
     data['WILLR'] = talib.WILLR(data['high'], data['low'], data['close'])
     data['K'], data['D'] = talib.STOCH(data['high'],

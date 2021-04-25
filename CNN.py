@@ -84,7 +84,7 @@ if __name__ == '__main__':
     '''
 
     callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3, restore_best_weights=True)
-    model.fit(XTraining, YTraining, batch_size=40, epochs=200, validation_data=(XValidation, YValidation), callbacks=[callback])
+    model.fit(XTraining, YTraining, batch_size=45, epochs=200, validation_data=(XValidation, YValidation), callbacks=[callback])
     model.save('model.h5')
 
     cost = model.evaluate(XEval, YEval, batch_size=100)

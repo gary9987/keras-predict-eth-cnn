@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
+# -1 sell 0 hold 1 buy
 def tripleBarrier(price, ub, lb, max_period):
     def end_price(s):
         return np.append(s[(s / s[0] > ub) | (s / s[0] < lb)], s[-1])[0] / s[0]
@@ -27,14 +28,14 @@ def tripleBarrier(price, ub, lb, max_period):
 
     
 if __name__ == '__main__':  # For test Class
-    df = pd.read_csv('kline1.csv')
+    df = pd.read_csv('train_val.csv')
 
 
     plt.show()
 
     #df.drop(columns=['time'], inplace=True)
 
-    data = tripleBarrier(df['close'], 1.03, 0.98, 40)
+    data = tripleBarrier(df['close'], 1.05, 0.97, 40)
     print(data)
     df['strategy'] = data['triple_barrier_signal']
     print(df['strategy'].value_counts())
@@ -45,16 +46,18 @@ if __name__ == '__main__':  # For test Class
     plt.xlabel('order')
     ax2 = ax1.twinx()
 
+    show_left_range = 500
+    show_right_range = 1000
     ax1.set_ylabel('close', color='tab:blue')
-    ax1.plot(df['close'][41800:42100], color='tab:blue', alpha=0.75)
+    ax1.plot(df['close'][show_left_range:show_right_range], color='tab:blue', alpha=0.75)
     ax1.tick_params(axis='y', labelcolor='tab:blue')
 
     ax2.set_ylabel('strategy', color='black')
-    ax2.plot(df['strategy'][41800:42100], color='black', alpha=0.75)
+    ax2.plot(df['strategy'][show_left_range:show_right_range], color='black', alpha=0.75)
     ax2.tick_params(axis='y', labelcolor='black')
 
     fig.tight_layout()
     plt.show()
 
-    df.to_csv('output.csv', index=None)
+    df.to_csv('labeled.csv', index=None)
 

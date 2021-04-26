@@ -58,7 +58,10 @@ def normolization(data):
 
 
 if __name__ == '__main__':  # For test Class
-    data = pd.read_csv('eval_labeled.csv', dtype=np.float)
+
+    filename = '1-3' # _labeled.csv
+    data = pd.read_csv( filename + '_labeled.csv', dtype=np.float)
+
     data.drop(columns=['time'], inplace=True)
     data['RSI'] = talib.RSI(data['close'], timeperiod = 14)
     data['WILLR'] = talib.WILLR(data['high'], data['low'], data['close'])
@@ -86,5 +89,5 @@ if __name__ == '__main__':  # For test Class
 
     data.drop(columns=['open', 'high', 'low', 'volume'], inplace=True)
     data = normolization(data)
-    data.to_csv('eval_indicatored.csv', index=None)
+    data.to_csv( filename + '_indicatored.csv', index=None)
 

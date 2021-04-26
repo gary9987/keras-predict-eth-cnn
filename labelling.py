@@ -28,7 +28,9 @@ def tripleBarrier(price, ub, lb, max_period):
 
     
 if __name__ == '__main__':  # For test Class
-    df = pd.read_csv('train_val.csv')
+
+    filename = '1-3'  # .csv
+    df = pd.read_csv(filename + '.csv')
 
 
     plt.show()
@@ -59,5 +61,5 @@ if __name__ == '__main__':  # For test Class
     fig.tight_layout()
     plt.show()
 
-    df.to_csv('labeled.csv', index=None)
+    df.to_csv( filename+'_labeled.csv', index=None)
 

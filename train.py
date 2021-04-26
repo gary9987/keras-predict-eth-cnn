@@ -5,8 +5,6 @@ from imblearn.under_sampling import RandomUnderSampler
 from solve_cudnn_error import *
 from sklearn.model_selection import train_test_split
 
-import os
-import datetime
 
 solve_cudnn_error()
 
